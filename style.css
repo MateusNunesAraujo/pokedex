@@ -70,7 +70,7 @@ main {
 
 }
 
-.sub-info{
+.sub-info {
     width: 100%;
     font-size: 24px;
     gap: 30px;
@@ -80,15 +80,64 @@ main {
     justify-content: center;
 }
 
-.btn{
-width: 40px;
-height: 40px;
-margin-bottom: 10px;
+.btn {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
 }
-.btn img{
+
+.btn img {
     border-radius: 100%;
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
     width: 40px;
     height: 40px;
 
 }
+
+/* modal */
+
+.modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #111111bd;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .6s;
+    --transform: translateY(-100vh);
+    --transition: transform .8s;
+}
+
+.modal--show{
+opacity: 1;
+pointer-events: unset;
+--transform: translateY(0);
+}
+
+.modal_container {
+    margin: auto;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90%;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 3em 2.5em;
+    display: grid;
+    gap: 1em;
+    place-items: center;
+    grid-auto-columns: 100%;
+    transform: var(--transform);
+    transition: var(--transition)
+}
+
+.modal_title {
+    font-size: 2.5rem;
+}
+
+.modal_paragraph {
+    margin-bottom: 10px;
+}
+
