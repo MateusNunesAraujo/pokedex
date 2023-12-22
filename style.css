@@ -52,13 +52,14 @@ main {
     display: flex;
     margin: auto;
     width: 300px;
-    background-color: #A7D9C6;
+    background-color: #f2f2f2;
     height: 280px;
     flex-direction: column;
     align-items: center;
 }
 
 .nombre-pokemon {
+    font-weight: bolder;
     border-radius: 10px;
     font-size: 30px;
     display: flex;
@@ -66,7 +67,7 @@ main {
     align-items: center;
     height: 50%;
     width: 100%;
-    background-color: #f2f2f2;
+    background-color: #73a592;
 
 }
 
@@ -81,9 +82,11 @@ main {
 }
 
 .btn {
+    text-align: center;
     width: 40px;
-    height: 40px;
+    height: 55px;
     margin-bottom: 10px;
+    transition: 0.1s;
 }
 
 .btn img {
@@ -91,12 +94,44 @@ main {
     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
     width: 40px;
     height: 40px;
+    transition: 0.1s;
+}
 
+.inf {
+    text-align: center;
+    padding: 10px;
+}
+
+.contenedor-about-me {
+    flex-direction: row-reverse;
+    display: flex;
+    width: 100%;
+}
+
+#about-me {
+    right: 20px;
+    bottom: 20px;
+    position: fixed;
+    /* position: absolute; */
+    width: 70px;
+    height: 70px;
+
+}
+
+footer {
+    border: solid;
+    background-color: #fff;
+    width: 200px;
+    height: 300px;
+    z-index: 2;
+    position: fixed;
+    bottom: -1000px;
 }
 
 /* modal */
 
 .modal {
+    z-index: 2;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -111,20 +146,19 @@ main {
     --transition: transform .8s;
 }
 
-.modal--show{
-opacity: 1;
-pointer-events: unset;
---transform: translateY(0);
+.modal--show {
+    opacity: 1;
+    pointer-events: unset;
+    --transform: translateY(0);
 }
 
 .modal_container {
     margin: auto;
     width: 90%;
-    max-width: 600px;
+    max-width: 400px;
     max-height: 90%;
     background-color: #fff;
     border-radius: 6px;
-    padding: 3em 2.5em;
     display: grid;
     gap: 1em;
     place-items: center;
@@ -133,11 +167,144 @@ pointer-events: unset;
     transition: var(--transition)
 }
 
-.modal_title {
-    font-size: 2.5rem;
+.pokemon {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 2fr;
+    background-color: #fff;
+    width: 100%;
+    height: 650px;
+
 }
 
-.modal_paragraph {
-    margin-bottom: 10px;
+.cancelar {
+    transition: 0.1s;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
 }
 
+.contenedor-1 {
+    background-color: #f2f2f2;
+    display: flex;
+    display: flex;
+    height: 200px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+}
+
+.contenedor-icono {
+    display: flex;
+    border-radius: 100%;
+    background-color: #fff;
+    width: 200px;
+    height: 200px;
+    justify-content: center;
+    align-items: center;
+}
+
+.clase {
+    display: flex;
+}
+
+.contenedor-2 {
+    display: flex;
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contenedor-2 h1 {
+    padding: 10px;
+}
+
+.descripcion {
+    padding: 10px;
+    margin: 0px 0px 10px 0px;
+}
+
+
+.habilidades {
+    display: flex;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+.contenedor-habilidades {
+    height: auto;
+    background-color: #fff;
+    width: 50%;
+}
+
+.nombre-habilidad {
+    text-align: center;
+    padding: 10px;
+}
+
+.poder-tipo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.descripcion-habilidad {
+    padding: 10px;
+}
+
+.contenedor-icono img {
+    width: 90%;
+    height: 90%;
+}
+
+.habitad {
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+.habitad img {
+
+    width: 100%;
+    height: 70px;
+}
+
+/* Clases activas */
+.btn-precionado {
+    width: 30px !important;
+    height: 30px !important;
+    transform: rotate(45deg);
+    transition: 0.1s;
+}
+
+.cancelar-precionado {
+    width: 30px;
+    height: 30px;
+    transition: 0.1s;
+}
+
+@media(max-width:320px) {
+    .contenedor {
+        grid-template-columns: 1fr;
+        width: 90%;
+    }
+
+    .card {
+        width: 250px;
+    }
+
+    #buscador {
+        width: 250px;
+    }
+
+    .pokemon {
+        height: 600px;
+    }
+}
