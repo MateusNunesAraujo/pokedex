@@ -255,15 +255,15 @@ text-align: center;
     position: absolute;
     z-index: 10;
     background-image: linear-gradient(54deg, rgba(0, 243, 141, 1) 59%, rgba(0, 158, 255, 1) 100%);
-    width: 115px;
+    width: 135px;
     height: 130px;
-    justify-content: center;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .pokeball-inf{
-width: 30px;
+width: 40px;
 }
 
 .peso-altura{
@@ -271,7 +271,12 @@ width: 30px;
     height: auto;
     width: 100%;
     justify-content: center;
-    gap: 30px;
+    gap: 20px;
+}
+
+#peso,#altura{
+    font-weight: 900;
+    font-size: 20px;
 }
 
 .peso-altura label {

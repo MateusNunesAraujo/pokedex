@@ -164,7 +164,7 @@ function informacion_pokemon(url) {
 
 }
 
-const url_api = "https://pokeapi.co/api/v2/pokemon?limit=10?limit=10&offset=0";
+const url_api = "https://pokeapi.co/api/v2/pokemon?limit=600?limit=600&offset=0";
 const demostracion = document.querySelector("#demostracion")
 fetch(url_api).then((response) => { return response.json() })
     .then((data) => {
