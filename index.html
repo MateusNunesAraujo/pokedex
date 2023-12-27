@@ -12,29 +12,86 @@
     <section class="modal">
         <div class="modal_container">
             <div class="pokemon">
-                <img src="boton.png" alt="" class="cancelar">
+                <div class="fila">
+                    <img src="boton.png" alt="" class="cancelar">
+                    <div id="number-pokedex">#</div>
+                </div>
+
                 <div class="contenedor-1">
+                    <div class="img-error">
+                        <img src="sad.png" alt="">
+                        <p class="mensaje-img-error">Este pokemón no contiene imagen trasera</p>
+                    </div>
+                    <div class="cont-inf-adicional">
+                        <img class="pokeball-inf" src="pokeball-inf.png" alt="">
+                        <div class="peso-altura">
+                            <label for="peso">Peso:
+                                <p id="peso">30</p>
+                            </label>
+                            <label for="altura">Altura:
+                                <p id="altura"></p>
+                            </label>
+                        </div>
+                    </div>
                     <div class="contenedor-icono">
-                        <img src="pokebola.png" alt="">
+                        <img src="pokebola.png" alt="pokemon sin imagen" class="img-pokemon">
+                        <img src="arrow.png" alt="" class="default-back">
+                        <img class="inf-adicional" src="information-button.png" alt="">
                     </div>
                 </div>
                 <div class="contenedor-2">
                     <h1 id="nombre-pokemon">pikachu</h1>
                     <div class="clase">
-                        <div>[legendaria]</div>
-                        <div>[Mitica]</div>
-                        <div>[bebe]</div>
+                        <div id="is-legendary">Legendaria:NO</div>
+                        <div id="is-mythical">Mitica:NO</div>
+                        <div id="is-baby">Bebe:NO</div>
                     </div>
-                    <p class="descripcion">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae dicta
-                        iste quae rerum, aut excepturi quisquam dolores quos quasi tempora blanditiis alias illum neque
-                        magnam id iure at maxime corporis.</p>
-                    <h3>habilidades</h3>
+                    <p class="descripcion">No hay información acerca de este pokemon</p>
+                    <div class="title-1">
+                        <img class="icono-style" src="estrella.png" alt="">
+                        <h3>habilidades</h3>
+                    </div>
                     <div class="habilidades">
-                       
+                        <!-- Contenido donde irá el resto de habilidades de cada pokemón -->
                     </div>
-                    <div class="habitad">
-                        Información donde ira acerca del habitad del pokemón
-                        <img src="" alt="">
+                    <div class="title-2">
+                        <img class="icono-style" src="grafico-de-barras.png" alt="">
+                        <h3>Estadisticas</h3>
+                    </div>
+                    <div class="estadisticas">
+                        <div class="pokemon-stats">
+                            <div class="stat">
+                                <div class="label">PS: <b class="valor" id="valor-hp"></b></div>
+                                <div class="bar" id="hp-bar"></div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">ATK: <b class="valor" id="valor-attack"></b></div>
+                                <div class="bar" id="attack-bar"></div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">DEF: <b class="valor" id="valor-defense"></b></div>
+                                <div class="bar" id="defense-bar"></div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">SATK: <b class="valor" id="valor-special-attack"></b></div>
+                                <div class="bar" id="special-attack-bar"></div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">SDEF: <b class="valor" id="valor-special-defense"></b></div>
+                                <div class="bar" id="special-defense-bar"></div>
+                            </div>
+                            <div class="stat">
+                                <div class="label">VEL: <b class="valor" id="valor-speed"></b></div>
+                                <div class="bar" id="speed-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title-3">
+                        <img class="icono-style" src="abeja.png" alt="">
+                        <h3>Habitdad</h3>
+                    </div>
+                    <div class="cont-habitad">
+                        <!-- Contenido donde irá el resto de pokemones que viven en ciertos habitads -->
                     </div>
                 </div>
             </div>
