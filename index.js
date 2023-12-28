@@ -164,65 +164,79 @@ function informacion_pokemon(url) {
 
 }
 
-const url_api = "https://pokeapi.co/api/v2/pokemon?limit=600?limit=600&offset=0";
-const demostracion = document.querySelector("#demostracion")
-fetch(url_api).then((response) => { return response.json() })
-    .then((data) => {
-        data.results.forEach(element => {
+let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
+const limit = 20; //cantidad de pokemones que se le pide a la API traer 
+
+function loadMorePokemons() {
+    const url_api = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
+    fetch(url_api)
+      .then((response) => response.json())
+      .then((data) => {
+        data.results.forEach((element) => {
             fetch(element.url).then((response) => { return response.json() })
-                .then((data2) => {
-                    fetch(data2.species.url).then((response) => { return response.json() })
-                        .then((data3) => {
-                            let tipo = '' //Intentar quitar los guiones para que no se vea feo
-                            let inf = ''
-                            data2.types.forEach(i => tipo += ' ' + i.type.name)
-                            inf += `<div class="contendor">
-                            <div class="card">
-                                <div class="nombre-pokemon">${element.name}</div>
-                                <div class="sub-info">
-                                    <div class="inf">${tipo}</div>
-                                    <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
-                                </div>
-                                <div class="btn" url="${element.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
+            .then((data2) => {
+                fetch(data2.species.url).then((response) => { return response.json() })
+                    .then((data3) => {
+                        let tipo = '' //Intentar quitar los guiones para que no se vea feo
+                        let inf = ''
+                        data2.types.forEach(i => tipo += ' ' + i.type.name)
+                        inf += `<div class="contendor-card">
+                        <div class="card">
+                            <div class="nombre-pokemon">${element.name}</div>
+                            <div class="sub-info">
+                                <div class="inf">${tipo}</div>
+                                <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
                             </div>
-                        </div>`
+                            <div class="btn" url="${element.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
+                        </div>
+                    </div>`
 
-                            contenedor.innerHTML += inf
-                            for (let card of contenedor.children) {
+                        contenedor.innerHTML += inf
+                        for (let card of contenedor.children) {
 
-                                let contenedores = card.children
-                                for (let nombre of contenedores) {
-                                    nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${ data3.color.name}, transparent)` /* += data3.color.name */
-                                }
+                            let contenedores = card.children
+                            for (let nombre of contenedores) {
+                                nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${ data3.color.name}, transparent)` /* += data3.color.name */
                             }
-                            let btn = document.querySelectorAll('.btn-2')
-                            for (let index = 0; index < btn.length; index++) {
-                                const element = btn[index];
-                                element.addEventListener('click', (e) => {
-                                    e.target.classList.add('btn-precionado')
-                                    e.target.src = 'pokebola-abierta.png'
-                                    setTimeout(() => {
+                        }
+                        let btn = document.querySelectorAll('.btn-2')
+                        for (let index = 0; index < btn.length; index++) {
+                            const element = btn[index];
+                            element.addEventListener('click', (e) => {
+                                e.target.classList.add('btn-precionado')
+                                e.target.src = 'pokebola-abierta.png'
+                                setTimeout(() => {
 
-                                        e.target.classList.remove('btn-precionado')
-                                    }, 100);
-                                    modal.classList.add('modal--show')
-                                })
+                                    e.target.classList.remove('btn-precionado')
+                                }, 100);
+                                modal.classList.add('modal--show')
+                            })
 
-                            }
+                        }
 
-                            for (let element of btn) {
-                                element.addEventListener('click', (e) => {
-                                    let url = e.target.parentElement.getAttribute('url')
-                                    informacion_pokemon(url)
-                                })
-                            }
+                        for (let element of btn) {
+                            element.addEventListener('click', (e) => {
+                                let url = e.target.parentElement.getAttribute('url')
+                                informacion_pokemon(url)
+                            })
+                        }
 
-                        })
+                    })
 
-                })
-        })
-    })
+            })
+        });
+      });
+  
+    offset += limit;
+  }
 
+  //Se llama a la función para cargar los primeros 20 pokemones 
+  loadMorePokemons();
+
+
+//Eventos: ------
+
+//Botón de cancelar:
 cancelar.addEventListener('click', (e) => {
 
     modal.classList.remove('modal--show')
@@ -236,6 +250,7 @@ cancelar.addEventListener('click', (e) => {
 
 })
 
+//Botón para mostrar la parte trasera del pokemón:
 document.querySelector('.default-back').addEventListener('click', (e) => {
     let url_front_default = document.querySelector('.img-pokemon').src
     let url_back_default = document.querySelector('.img-pokemon').getAttribute('segunda-imagen')
@@ -276,6 +291,8 @@ document.querySelector('.default-back').addEventListener('click', (e) => {
 
 })
 
+
+//Botón para mostrar informacion adicional del pokemon (peso altura)
 document.querySelector('.inf-adicional').addEventListener('click',(e)=>{
     if(document.querySelector('.cont-inf-adicional').classList.contains('mostrar-peso-altura')){
         document.querySelector('.cont-inf-adicional').classList.remove('mostrar-peso-altura')
@@ -294,4 +311,15 @@ document.querySelector('.inf-adicional').addEventListener('click',(e)=>{
 
 })
 
+//Mostrar más 20 pokemones al momento de hacer scroll hasta la parte final del contenedor visible
+contenedor.addEventListener('scroll', () => {
+    
+  const scrollPosition = contenedor.scrollTop;
+  const totalHeight = contenedor.scrollHeight;
+  const windowHeight = contenedor.clientHeight;
+  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`)
 
+  if (scrollPosition + windowHeight >= totalHeight - 200) {
+    loadMorePokemons(); //Aquí se pide otros 20 pokemones
+  }
+});
