@@ -33,6 +33,34 @@ main {
     background-color: #BF343F;
 }
 
+.ventana-cargando {
+    transition: 1s;
+    color: #f2f2f2;
+    border-radius: 20px;
+    background: #000000a6;
+    margin: 30px auto 0 auto;
+    display: flex;
+    width: 40%;
+    height: 25%;
+    position: fixed;
+    z-index: 5;
+    top: -2000px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ventana-cargando img {
+    width: 70px;
+}
+
+.ventana-cargando p {
+    text-align: center;
+}
+
 .contenedor {
     border-radius: 2%;
     padding-top: 10px;
@@ -178,7 +206,7 @@ footer {
 
 }
 
-.fila{
+.fila {
     width: 100%;
     display: flex;
     position: absolute;
@@ -192,7 +220,7 @@ footer {
     height: 40px;
 }
 
-#number-pokedex{
+#number-pokedex {
     font-size: 20px;
     display: flex;
     width: 40px;
@@ -201,6 +229,7 @@ footer {
     justify-content: center;
     align-items: center;
 }
+
 .contenedor-1 {
     background-color: #f2f2f2;
     display: flex;
@@ -212,7 +241,7 @@ footer {
     height: 250px;
 }
 
-.inf-adicional{
+.inf-adicional {
     position: relative;
     width: 30px;
     height: 30px;
@@ -220,18 +249,18 @@ footer {
     right: 90px;
 }
 
-.inf-adicional{
+.inf-adicional {
     width: 30px;
     height: 30px;
 }
 
-.img-error{
+.img-error {
     display: none;
     padding: 5px;
     border-radius: 20px;
     position: absolute;
     z-index: 10;
-    background-image: linear-gradient(54deg, rgb(255 248 220 / 88%) 59%, rgba(149,131,131,0.4767156862745098) 100%);
+    background-image: linear-gradient(54deg, rgb(255 248 220 / 88%) 59%, rgba(149, 131, 131, 0.4767156862745098) 100%);
     width: 115px;
     height: 130px;
     justify-content: center;
@@ -239,16 +268,16 @@ footer {
     align-items: center;
 }
 
-.img-error img{
+.img-error img {
     width: 60px;
     height: 60px;
 }
 
-.mensaje-img-error{
-text-align: center;
+.mensaje-img-error {
+    text-align: center;
 }
 
-.cont-inf-adicional{
+.cont-inf-adicional {
     display: none;
     padding: 5px;
     border-radius: 20px;
@@ -262,11 +291,11 @@ text-align: center;
     gap: 10px;
 }
 
-.pokeball-inf{
-width: 40px;
+.pokeball-inf {
+    width: 40px;
 }
 
-.peso-altura{
+.peso-altura {
     display: flex;
     height: auto;
     width: 100%;
@@ -274,13 +303,14 @@ width: 40px;
     gap: 20px;
 }
 
-#peso,#altura{
+#peso,
+#altura {
     font-weight: 900;
     font-size: 20px;
 }
 
 .peso-altura label {
-text-align: center;
+    text-align: center;
 }
 
 .contenedor-icono {
@@ -294,7 +324,7 @@ text-align: center;
     flex-direction: column;
 }
 
-.default-back{
+.default-back {
     transition: 0.1;
     position: relative;
     display: block;
@@ -325,7 +355,7 @@ text-align: center;
     margin: 0px 0px 10px 0px;
 }
 
-.title-1{
+.title-1 {
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -336,7 +366,7 @@ text-align: center;
     background-image: linear-gradient(180deg, #dedf10, transparent);
 }
 
-.title-2{
+.title-2 {
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -385,12 +415,48 @@ text-align: center;
     height: 90%;
 }
 
-.estadisticas{
+.estadisticas {
     display: flex;
     width: 100%;
     height: auto;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+.evoluciones{
+    display: flex;
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.evolucion{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cont-evoluciones{
+    width: 100%;
+    display: flex;
+    text-align: justify;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.lista-evoluciones{
+    margin: 15px 15px;
+    grid-template-columns: 1fr 1fr 1fr;
+    display: grid;
+    gap: 10px;
+}
+
+.evolucion img {
+    width: 55px;
+    height: 55px;
 }
 
 .cont-habitad {
@@ -402,7 +468,7 @@ text-align: center;
     align-items: center;
 }
 
-.title-habitad{
+.title-habitad {
     margin-top: 20px;
     display: flex;
     gap: 10px;
@@ -411,13 +477,13 @@ text-align: center;
     flex-direction: column;
 }
 
-.icono-style{
+.icono-style {
     margin-right: 5px;
-width: 30px;
-height: 30px;
+    width: 30px;
+    height: 30px;
 }
 
-.title-3{
+.title-3 {
     padding: 5px;
     display: flex;
     justify-content: center;
@@ -428,7 +494,7 @@ height: 30px;
     background-image: linear-gradient(180deg, #6bff7c, transparent);
 }
 
-.descripcion-habitad{
+.descripcion-habitad {
     width: 100%;
     display: flex;
     text-align: justify;
@@ -444,26 +510,43 @@ height: 30px;
     gap: 10px;
 }
 
-.cont-otros-pokemones{
+.cont-otros-pokemones {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
-.icono-otros-pokemones{
+.icono-otros-pokemones {
     border-radius: 100%;
     width: 55px;
     height: 55px;
 }
 
-/* Clases activas */
-.mostrar-peso-altura{
-display: flex;
+.title-4{
+
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+    width: 50%;
+    border-radius: 50px;
+    background-image: linear-gradient(180deg, #8d0996, transparent);
 }
 
-.img-error-activado{
-display: flex;
+/* Clases activas */
+.ventana-cargando-activado {
+    transition: 0.5s;
+    top: 200px;
+}
+
+.mostrar-peso-altura {
+    display: flex;
+}
+
+.img-error-activado {
+    display: flex;
 }
 
 .btn-precionado {
@@ -478,22 +561,21 @@ display: flex;
     transition: 0.1s;
 }
 
-.default-back-precionado{
+.default-back-precionado {
     transition: 0.1s;
     width: 30px;
     height: 35px;
-   
+
 }
 
-.inf-adicional-precionado{
+.inf-adicional-precionado {
     transition: 0.1s;
     width: 25px;
     height: 25px;
-   
+
 }
 
 /* ---------------------------- */
-
 
 .pokemon-stats {
     margin-left: 5%;
@@ -513,7 +595,8 @@ display: flex;
 
 .bar {
     max-width: 350px;
-    width: 200px; /* Ajusta el ancho de la barra según tus preferencias */
+    width: 200px;
+    /* Ajusta el ancho de la barra según tus preferencias */
     height: 20px;
     background-color: #d0c6c6;
     border-radius: 5px;
@@ -522,8 +605,10 @@ display: flex;
 
 .fill {
     height: 100%;
-    background-color: #4caf50; /* Color de la barra llenada */
-    transition: width 0.5s; /* Añade una transición para un efecto suave */
+    background-color: #4caf50;
+    /* Color de la barra llenada */
+    transition: width 0.5s;
+    /* Añade una transición para un efecto suave */
 }
 
 
@@ -550,7 +635,7 @@ display: flex;
         grid-template-columns: 1fr 1fr;
     }
 
-    .bar{
+    .bar {
         max-width: 250px;
     }
 }
@@ -573,7 +658,7 @@ display: flex;
         height: 600px;
     }
 
-    .bar{
+    .bar {
         max-width: 260px;
     }
 }
@@ -596,8 +681,7 @@ display: flex;
         height: 600px;
     }
 
-    .bar{
+    .bar {
         max-width: 260px;
     }
 }
-

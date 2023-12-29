@@ -26,9 +26,9 @@ function informacion_pokemon(url) {
         imagen_pokemon.setAttribute('segunda-imagen', data4.sprites.back_default)
         document.querySelector('#nombre-pokemon').textContent = data4.name
         document.querySelector('#number-pokedex').textContent = `#${data4.id}`
-        document.querySelector('#peso').textContent = `${data4.weight/10}kg`
-        document.querySelector('#altura').textContent = `${data4.height/10}m`
-        
+        document.querySelector('#peso').textContent = `${data4.weight / 10}kg`
+        document.querySelector('#altura').textContent = `${data4.height / 10}m`
+
         /* Agregar clase del pokemon */
         fetch(data4.species.url).then(response => response.json()).then((data5) => {
             if (data5.flavor_text_entries.length !== 0) {
@@ -43,10 +43,7 @@ function informacion_pokemon(url) {
             }
         })
         fetch(data4.species.url).then(response => response.json()).then(clase_pokemon => {
-
             console.log(clase_pokemon)
-
-
             if (clase_pokemon.is_baby !== false) {
                 document.querySelector('#is-baby').style.color = 'green'
                 document.querySelector('#is-baby').textContent = 'Bebe:SI'
@@ -110,6 +107,32 @@ function informacion_pokemon(url) {
                     break;
             }
         })
+
+        /* Evoluciones */
+
+        /* 
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        -
+        - */
+
+
+        /* --------------------------------------------------------------- */
+
         fetch(data4.location_area_encounters).then(response => response.json()).then((data7) => {
             let habitad = ''
             if (data7.length !== 0) {
@@ -166,21 +189,23 @@ function informacion_pokemon(url) {
 
 let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
 const limit = 20; //cantidad de pokemones que se le pide a la API traer 
-
+let nro_pokemon = 0
 function loadMorePokemons() {
     const url_api = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     fetch(url_api)
-      .then((response) => response.json())
-      .then((data) => {
-        data.results.forEach((element) => {
-            fetch(element.url).then((response) => { return response.json() })
-            .then((data2) => {
-                fetch(data2.species.url).then((response) => { return response.json() })
-                    .then((data3) => {
-                        let tipo = '' //Intentar quitar los guiones para que no se vea feo
-                        let inf = ''
-                        data2.types.forEach(i => tipo += ' ' + i.type.name)
-                        inf += `<div class="contendor-card">
+        .then((response) => response.json())
+        .then((data) => {
+            data.results.forEach((element) => {
+
+                fetch(element.url).then((response) => { return response.json() })
+                    .then((data2) => {
+                        fetch(data2.species.url).then((response) => { return response.json() })
+                            .then((data3) => {
+
+                                let tipo = '' //Intentar quitar los guiones para que no se vea feo
+                                let inf = ''
+                                data2.types.forEach(i => tipo += ' ' + i.type.name)
+                                inf += `<div class="contendor-card">
                         <div class="card">
                             <div class="nombre-pokemon">${element.name}</div>
                             <div class="sub-info">
@@ -191,47 +216,55 @@ function loadMorePokemons() {
                         </div>
                     </div>`
 
-                        contenedor.innerHTML += inf
-                        for (let card of contenedor.children) {
+                                if (inf !== '') {
+                                    contenedor.innerHTML += inf
+                                    nro_pokemon += 1
+                                    console.log(nro_pokemon)
+                                }else{
+                                    contenedor.innerHTML = `<h1>-SE ACABO LA LISTA DE POKEMONES-</h1>`
+                                    return
+                                }
 
-                            let contenedores = card.children
-                            for (let nombre of contenedores) {
-                                nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${ data3.color.name}, transparent)` /* += data3.color.name */
-                            }
-                        }
-                        let btn = document.querySelectorAll('.btn-2')
-                        for (let index = 0; index < btn.length; index++) {
-                            const element = btn[index];
-                            element.addEventListener('click', (e) => {
-                                e.target.classList.add('btn-precionado')
-                                e.target.src = 'pokebola-abierta.png'
-                                setTimeout(() => {
+                                for (let card of contenedor.children) {
 
-                                    e.target.classList.remove('btn-precionado')
-                                }, 100);
-                                modal.classList.add('modal--show')
+                                    let contenedores = card.children
+                                    for (let nombre of contenedores) {
+                                        nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
+                                    }
+                                }
+                                let btn = document.querySelectorAll('.btn-2')
+                                for (let index = 0; index < btn.length; index++) {
+                                    const element = btn[index];
+                                    element.addEventListener('click', (e) => {
+                                        e.target.classList.add('btn-precionado')
+                                        e.target.src = 'pokebola-abierta.png'
+                                        setTimeout(() => {
+
+                                            e.target.classList.remove('btn-precionado')
+                                        }, 100);
+                                        modal.classList.add('modal--show')
+                                    })
+
+                                }
+
+                                for (let element of btn) {
+                                    element.addEventListener('click', (e) => {
+                                        let url = e.target.parentElement.getAttribute('url')
+                                        informacion_pokemon(url)
+                                    })
+                                }
+
                             })
-
-                        }
-
-                        for (let element of btn) {
-                            element.addEventListener('click', (e) => {
-                                let url = e.target.parentElement.getAttribute('url')
-                                informacion_pokemon(url)
-                            })
-                        }
 
                     })
-
-            })
+            });
         });
-      });
-  
-    offset += limit;
-  }
 
-  //Se llama a la función para cargar los primeros 20 pokemones 
-  loadMorePokemons();
+    offset += limit;
+}
+
+//Se llama a la función para cargar los primeros 20 pokemones 
+loadMorePokemons();
 
 
 //Eventos: ------
@@ -255,21 +288,19 @@ document.querySelector('.default-back').addEventListener('click', (e) => {
     let url_front_default = document.querySelector('.img-pokemon').src
     let url_back_default = document.querySelector('.img-pokemon').getAttribute('segunda-imagen')
 
-//Arreglar validacion para ver cuando un pokemon no tiene imagen de frente
-    
+    //Arreglar validacion para ver cuando un pokemon no tiene imagen de frente
+
     e.target.classList.add('default-back-precionado')
     setTimeout(() => {
         e.target.classList.remove('default-back-precionado')
     }, 100);
     if (url_back_default !== url_front_default) {
         if (url_back_default !== 'null') {
-            console.log('uno')
             document.querySelector('.img-pokemon').src = url_back_default
             document.querySelector('.img-pokemon').setAttribute('segunda-imagen', url_front_default)
         } else {
             document.querySelector('.img-pokemon').setAttribute('segunda-imagen', url_front_default)
             let img_error = document.querySelector('.img-error')
-            console.log('dos')
 
             img_error.classList.add('img-error-activado')
             setTimeout(() => {
@@ -277,32 +308,28 @@ document.querySelector('.default-back').addEventListener('click', (e) => {
             }, 2000);
 
         }
-    }else{
+    } else {
         document.querySelector('.img-pokemon').setAttribute('segunda-imagen', url_front_default)
         let img_error = document.querySelector('.img-error')
-        console.log('dos')
-
         img_error.classList.add('img-error-activado')
         setTimeout(() => {
             img_error.classList.remove('img-error-activado')
         }, 2000);
     }
-
-
 })
 
 
 //Botón para mostrar informacion adicional del pokemon (peso altura)
-document.querySelector('.inf-adicional').addEventListener('click',(e)=>{
-    if(document.querySelector('.cont-inf-adicional').classList.contains('mostrar-peso-altura')){
+document.querySelector('.inf-adicional').addEventListener('click', (e) => {
+    if (document.querySelector('.cont-inf-adicional').classList.contains('mostrar-peso-altura')) {
         document.querySelector('.cont-inf-adicional').classList.remove('mostrar-peso-altura')
-    }else{
-    document.querySelector('.cont-inf-adicional').classList.add('mostrar-peso-altura')
+    } else {
+        document.querySelector('.cont-inf-adicional').classList.add('mostrar-peso-altura')
     }
 })
 
 
-document.querySelector('.inf-adicional').addEventListener('click',(e)=>{
+document.querySelector('.inf-adicional').addEventListener('click', (e) => {
 
     e.target.classList.add('inf-adicional-precionado')
     setTimeout(() => {
@@ -313,13 +340,18 @@ document.querySelector('.inf-adicional').addEventListener('click',(e)=>{
 
 //Mostrar más 20 pokemones al momento de hacer scroll hasta la parte final del contenedor visible
 contenedor.addEventListener('scroll', () => {
-    
-  const scrollPosition = contenedor.scrollTop;
-  const totalHeight = contenedor.scrollHeight;
-  const windowHeight = contenedor.clientHeight;
-  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`)
+    let ventana_carga = document.querySelector('.ventana-cargando')
+    const scrollPosition = contenedor.scrollTop;
+    const totalHeight = contenedor.scrollHeight;
+    const windowHeight = contenedor.clientHeight;
+   /*  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`) */
 
-  if (scrollPosition + windowHeight >= totalHeight - 200) {
-    loadMorePokemons(); //Aquí se pide otros 20 pokemones
-  }
+    if (scrollPosition + windowHeight + 1 >= totalHeight) {
+        loadMorePokemons(); //Aquí se pide otros 20 pokemones
+        ventana_carga.classList.add('ventana-cargando-activado')
+        setTimeout(() => {
+            ventana_carga.classList.remove('ventana-cargando-activado')
+        }, 2500);
+
+    }
 });
