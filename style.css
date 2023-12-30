@@ -594,6 +594,7 @@ footer {
 }
 
 .bar {
+    transition: 1.5s;
     max-width: 350px;
     width: 200px;
     /* Ajusta el ancho de la barra según tus preferencias */
