@@ -4,6 +4,12 @@ let cancelar = document.querySelector('.cancelar')
 let cont_habilidades = document.querySelector('.habilidades')
 let cont_habitad = document.querySelector('.cont-habitad')
 let valor_est = document.querySelectorAll('.valor')
+let buscador = document.querySelector('#buscador')
+let btn_buscador = document.querySelector('#btn-buscador')
+let buscando = false
+let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
+const limit = 20; //cantidad de pokemones que se le pide a la API traer 
+let nro_pokemon = 0
 
 
 /* ------------ */
@@ -44,25 +50,22 @@ function informacion_pokemon(url) {
         })
         fetch(data4.species.url).then(response => response.json()).then(clase_pokemon => {
             if (clase_pokemon.is_baby !== false) {
-                document.querySelector('#is-baby').style.color = 'green'
-                document.querySelector('#is-baby').textContent = 'Bebe:SI'
+                document.querySelector('#is-baby').style.color = 'pink'
+                document.querySelector('#is-baby').textContent = 'Bebé'
             } else {
-                document.querySelector('#is-baby').style.color = 'black'
-                document.querySelector('#is-baby').textContent = 'Bebe:NO'
+                document.querySelector('#is-baby').textContent = ''
             }
             if (clase_pokemon.is_legendary !== false) {
-                document.querySelector('#is-legendary').style.color = 'green'
-                document.querySelector('#is-legendary').textContent = 'Legendaria:SI'
+                document.querySelector('#is-legendary').style.color = 'orange'
+                document.querySelector('#is-legendary').textContent = 'Legendaria'
             } else {
-                document.querySelector('#is-legendary').style.color = 'black'
-                document.querySelector('#is-legendary').textContent = 'Legendaria:NO'
+                document.querySelector('#is-legendary').textContent = ''
             }
             if (clase_pokemon.is_mythical !== false) {
-                document.querySelector('#is-mythical').style.color = 'green'
-                document.querySelector('#is-mythical').textContent = 'Mitica:SI'
+                document.querySelector('#is-mythical').style.color = '#740090'
+                document.querySelector('#is-mythical').textContent = 'Mítica'
             } else {
-                document.querySelector('#is-mythical').style.color = 'black'
-                document.querySelector('#is-mythical').textContent = 'Mitica:NO'
+                document.querySelector('#is-mythical').textContent = ''
             }
 
         })
@@ -110,26 +113,44 @@ function informacion_pokemon(url) {
         /* Evoluciones */
         fetch(data4.species.url).then(response => response.json()).then((url_evoluciones) => {
             fetch(url_evoluciones.evolution_chain.url).then(response => response.json()).then((evoluciones) => {
-                console.log(evoluciones.chain.evolves_to[0].species)
+                console.log(evoluciones.chain)
                 document.querySelector(".lista-evoluciones").innerHTML = ''
                 let lista_evoluciones = document.querySelector(".lista-evoluciones")
                 let template_evoluciones = ''
+                /* Primera evolución */
+                template_evoluciones += `
+                    <div class="evolucion">
+                        <img src="pokeball-evol.png" alt="">
+                        <a href="https://pokeapi.co/api/v2/pokemon/${evoluciones.chain.species.name}/">${evoluciones.chain.species.name}</a>
+                    </div>`
+
                 evoluciones.chain.evolves_to.forEach(element => {
+                    /* Segunda evolución */
                     template_evoluciones += `
                     <div class="evolucion">
                         <img src="pokeball-evol.png" alt="">
                         <a href="https://pokeapi.co/api/v2/pokemon/${element.species.name}/">${element.species.name}</a>
                     </div>`
 
+                    /* Tercera evolución */
+                    if (element.evolves_to.length !== 0) {
+                        element.evolves_to.forEach(element2 => {
+                            template_evoluciones += `
+                            <div class="evolucion">
+                                <img src="pokeball-evol.png" alt="">
+                                <a href="https://pokeapi.co/api/v2/pokemon/${element2.species.name}/">${element2.species.name}</a>
+                            </div>`
+                        });
+                    }
+
                 })
                 lista_evoluciones.innerHTML += template_evoluciones
-                
-        document.querySelector('.evolucion a').addEventListener('click',(e)=>{
-            e.preventDefault()
-           informacion_pokemon(e.target.getAttribute('href'))
-            })
-
-
+                document.querySelectorAll('.evolucion a').forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        e.preventDefault()
+                        informacion_pokemon(e.target.getAttribute('href'))
+                    })
+                })
             })
         })
 
@@ -139,7 +160,7 @@ function informacion_pokemon(url) {
             let habitad = ''
             if (data7.length !== 0) {
 
-                data7.forEach((element, index) => {
+                data7.forEach(element => {
 
                     let pokemones = ''
                     fetch(element.location_area.url).then(response => response.json()).then((inf_habitad) => {
@@ -167,12 +188,13 @@ function informacion_pokemon(url) {
                     </div>
                 </div>`
                         cont_habitad.innerHTML = habitad
-                        /* ----- Modificar para iterar en los varios contenedor que hay de los otros pokemones------- */
-                       /*  document.querySelector('.cont-otros-pokemones').addEventListener('click',(e)=>{
-                            e.preventDefault()
-                            console.log(e.traget)
-                           informacion_pokemon(e.target.getAttribute('href'))
-                            }) */
+
+                        document.querySelectorAll('.cont-otros-pokemones').forEach(element => {
+                            element.addEventListener('click', (e) => {
+                                e.preventDefault()
+                                informacion_pokemon(e.target.getAttribute('href'))
+                            })
+                        })
                     })
 
                 })
@@ -189,17 +211,19 @@ function informacion_pokemon(url) {
                     </div>
                 </div>`
                 cont_habitad.innerHTML = habitad
-               
+
             }
         })
+    }).catch(error => {
+        console.log('Aquí se esta manejando el error')
     })
 
 }
 
-let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
-const limit = 20; //cantidad de pokemones que se le pide a la API traer 
-let nro_pokemon = 0
+
 function loadMorePokemons() {
+    contenedor.classList.remove('contenedor-activado')
+    buscando = false
     const url_api = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     fetch(url_api)
         .then((response) => response.json())
@@ -208,6 +232,7 @@ function loadMorePokemons() {
 
                 fetch(element.url).then((response) => { return response.json() })
                     .then((data2) => {
+                        console.log(data2)
                         fetch(data2.species.url).then((response) => { return response.json() })
                             .then((data3) => {
 
@@ -238,7 +263,9 @@ function loadMorePokemons() {
 
                                     let contenedores = card.children
                                     for (let nombre of contenedores) {
-                                        nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
+                                        if (nombre.children[0] != undefined) {
+                                            nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
+                                        }
                                     }
                                 }
                                 let btn = document.querySelectorAll('.btn-2')
@@ -348,20 +375,112 @@ document.querySelector('.inf-adicional').addEventListener('click', (e) => {
 })
 
 //Mostrar más 20 pokemones al momento de hacer scroll hasta la parte final del contenedor visible
+/*  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`) */
 contenedor.addEventListener('scroll', () => {
     let ventana_carga = document.querySelector('.ventana-cargando')
     const scrollPosition = contenedor.scrollTop;
     const totalHeight = contenedor.scrollHeight;
     const windowHeight = contenedor.clientHeight;
-    /*  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`) */
+    if (buscando === false) {
+        if (scrollPosition + windowHeight + 1 >= totalHeight) {
+            loadMorePokemons(); //Aquí se pide otros 20 pokemones
+            ventana_carga.classList.add('ventana-cargando-activado')
+            buscador.disabled = true
+            setTimeout(() => {
+                buscador.disabled = false
+                ventana_carga.classList.remove('ventana-cargando-activado')
+            }, 2500);
 
-    if (scrollPosition + windowHeight + 1 >= totalHeight) {
-        loadMorePokemons(); //Aquí se pide otros 20 pokemones
-        ventana_carga.classList.add('ventana-cargando-activado')
-        setTimeout(() => {
-            ventana_carga.classList.remove('ventana-cargando-activado')
-        }, 2500);
-
+        }
     }
 });
+btn_buscador.addEventListener('click', () => {
 
+    buscando = true
+    let valor_busqueda = buscador.value.trim();
+    console.log(valor_busqueda)
+    if (buscando) {
+        contenedor.classList.remove('contenedor-activado')
+        document.querySelector('.contenedor').innerHTML = ''
+        fetch(`https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/`).then(response => response.json()).then((resultado) => {
+            fetch(resultado.species.url).then((response) => { return response.json() })
+                .then((data3) => {
+
+                    let tipo = '' //Intentar quitar los guiones para que no se vea feo
+                    let inf = ''
+                    resultado.types.forEach(i => tipo += ' ' + i.type.name)
+                    inf += `<div class="contendor-card">
+                        <div class="card">
+                            <div class="nombre-pokemon">${resultado.name}</div>
+                            <div class="sub-info">
+                                <div class="inf">${tipo}</div>
+                                <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
+                            </div>
+                            <div class="btn" url="https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/"><img class="btn-2" src="pokebola.png" alt=""></div>
+                        </div>
+                    </div>`
+
+                    if (inf !== '') {
+                        contenedor.innerHTML += inf
+                        nro_pokemon += 1
+                        console.log(nro_pokemon)
+                    } else {
+                        contenedor.innerHTML = `<h1>-SE ACABO LA LISTA DE POKEMONES-</h1>`
+                        return
+                    }
+
+                    for (let card of contenedor.children) {
+
+                        let contenedores = card.children
+                        for (let nombre of contenedores) {
+                            nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
+                        }
+                    }
+                    let btn = document.querySelectorAll('.btn-2')
+                    for (let index = 0; index < btn.length; index++) {
+                        const element = btn[index];
+                        element.addEventListener('click', (e) => {
+                            e.target.classList.add('btn-precionado')
+                            e.target.src = 'pokebola-abierta.png'
+                            setTimeout(() => {
+
+                                e.target.classList.remove('btn-precionado')
+                            }, 100);
+                            modal.classList.add('modal--show')
+                        })
+
+                    }
+
+                    for (let element of btn) {
+                        element.addEventListener('click', (e) => {
+                            let url = e.target.parentElement.getAttribute('url')
+                            informacion_pokemon(url)
+                        })
+                    }
+
+
+                })
+
+        }).catch(error => {
+            contenedor.classList.add('contenedor-activado')
+            contenedor.innerHTML = `
+            <div id="sin-resultados">
+                <img src="sin-resultados.png" alt=""> 
+                <p>Sin resultados en su busqueda</p>
+            </div>`
+
+        })
+
+    }
+
+})
+buscador.addEventListener('input', (e) => {
+    buscando = true
+    let valor_busqueda = e.target.value.trim();
+    console.log(valor_busqueda)
+    if (valor_busqueda === '') {
+        contenedor.classList.remove('contenedor-activado')
+        document.querySelector('.contenedor').innerHTML = ''
+        loadMorePokemons()
+    }
+})
