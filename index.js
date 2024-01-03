@@ -70,19 +70,17 @@ function informacion_pokemon(url) {
 
         })
         let habilidades = ''
-        data4.moves.forEach((element, i) => {
-            fetch(element.move.url).then(response => response.json()).then((data6) => {
-                if (i <= 3) {
-                    let descripcionEs = data6.flavor_text_entries.find(entry => entry.language.name === 'es');
+        data4.abilities.forEach((element, i) => {
+            fetch(element.ability.url).then(response => response.json()).then((data6) => {
+                console.log(data6)
+                let descripcionEs = data6.names.find(entry => entry.language.name === 'es');
+                let flavor_text_entriesES = data6.flavor_text_entries.find(entry => entry.language.name === 'es')
                     habilidades += `<div class="contenedor-habilidades">
-                                        <div class="nombre-habilidad">${data6.names[5].name}</div>
-                                        <div class="poder-tipo">
-                                            <div class="categoria-move">${data6.type.name}</div>
-                                        </div>
-                                        <div class="descripcion-habilidad">${descripcionEs ? descripcionEs.flavor_text : 'Descripción no disponible'}</div>
+                                        <div class="nombre-habilidad">${descripcionEs.name }</div>
+                                        <div class="descripcion-habilidad">${flavor_text_entriesES ? flavor_text_entriesES.flavor_text: 'Descripción no disponible'}</div>
                                     </div>`;
                     cont_habilidades.innerHTML = habilidades;
-                }
+                
             });
         });
         data4.stats.forEach((i) => {
@@ -113,7 +111,6 @@ function informacion_pokemon(url) {
         /* Evoluciones */
         fetch(data4.species.url).then(response => response.json()).then((url_evoluciones) => {
             fetch(url_evoluciones.evolution_chain.url).then(response => response.json()).then((evoluciones) => {
-                console.log(evoluciones.chain)
                 document.querySelector(".lista-evoluciones").innerHTML = ''
                 let lista_evoluciones = document.querySelector(".lista-evoluciones")
                 let template_evoluciones = ''
@@ -232,7 +229,6 @@ function loadMorePokemons() {
 
                 fetch(element.url).then((response) => { return response.json() })
                     .then((data2) => {
-                        console.log(data2)
                         fetch(data2.species.url).then((response) => { return response.json() })
                             .then((data3) => {
 
@@ -395,17 +391,15 @@ contenedor.addEventListener('scroll', () => {
     }
 });
 btn_buscador.addEventListener('click', () => {
-
     buscando = true
     let valor_busqueda = buscador.value.trim();
-    console.log(valor_busqueda)
     if (buscando) {
         contenedor.classList.remove('contenedor-activado')
         document.querySelector('.contenedor').innerHTML = ''
+        contenedor.classList.add('contenedor-activado')
         fetch(`https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/`).then(response => response.json()).then((resultado) => {
             fetch(resultado.species.url).then((response) => { return response.json() })
                 .then((data3) => {
-
                     let tipo = '' //Intentar quitar los guiones para que no se vea feo
                     let inf = ''
                     resultado.types.forEach(i => tipo += ' ' + i.type.name)
@@ -419,7 +413,6 @@ btn_buscador.addEventListener('click', () => {
                             <div class="btn" url="https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/"><img class="btn-2" src="pokebola.png" alt=""></div>
                         </div>
                     </div>`
-
                     if (inf !== '') {
                         contenedor.innerHTML += inf
                         nro_pokemon += 1
@@ -428,7 +421,6 @@ btn_buscador.addEventListener('click', () => {
                         contenedor.innerHTML = `<h1>-SE ACABO LA LISTA DE POKEMONES-</h1>`
                         return
                     }
-
                     for (let card of contenedor.children) {
 
                         let contenedores = card.children
@@ -448,9 +440,7 @@ btn_buscador.addEventListener('click', () => {
                             }, 100);
                             modal.classList.add('modal--show')
                         })
-
                     }
-
                     for (let element of btn) {
                         element.addEventListener('click', (e) => {
                             let url = e.target.parentElement.getAttribute('url')
@@ -458,8 +448,8 @@ btn_buscador.addEventListener('click', () => {
                         })
                     }
 
-
                 })
+                   
 
         }).catch(error => {
             contenedor.classList.add('contenedor-activado')
@@ -472,12 +462,20 @@ btn_buscador.addEventListener('click', () => {
         })
 
     }
+    
+    let mensaje_pikachu = `
+    <div class="mensaje-pikachu">
+        <div class="contenedor-mensaje-pikachu">
+            <img class="pikachu" src="happy_cartoon_pikachu_pointing_at_an_invisible_s.png" alt="pikachu">
+            <p>¡Aquí tienes al pokemón que estabas buscando!</p>
+        </div>
+    </div>`
+    contenedor.innerHTML += mensaje_pikachu
 
 })
 buscador.addEventListener('input', (e) => {
     buscando = true
     let valor_busqueda = e.target.value.trim();
-    console.log(valor_busqueda)
     if (valor_busqueda === '') {
         contenedor.classList.remove('contenedor-activado')
         document.querySelector('.contenedor').innerHTML = ''

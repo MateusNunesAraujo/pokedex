@@ -343,6 +343,8 @@ footer {
     align-items: center;
 }
 
+
+
 .contenedor-2 h1 {
     padding: 10px;
 }
@@ -375,6 +377,7 @@ footer {
 }
 
 .habilidades {
+    margin: 20px 0 20px 0;
     display: flex;
     width: 100%;
     height: auto;
@@ -539,7 +542,9 @@ footer {
 }
 
 .contenedor-activado{
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
 }
 
 #sin-resultados{
@@ -590,7 +595,25 @@ height: 100px;
     transition: 0.1s;
     width: 25px;
     height: 25px;
+}
 
+.contenedor-mensaje-pikachu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column-reverse;
+}
+
+.pikachu{
+    background: transparent !important;
+    height: 300px;
+}
+
+.mensaje-pikachu{
+    color: white;
+    font-size: 20px;
+    text-align: center;
 }
 
 /* ---------------------------- */
@@ -639,7 +662,7 @@ height: 100px;
     }
 
     .card {
-        width: 250px;
+        width: 250px !important;
     }
 
     #buscador {
