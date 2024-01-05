@@ -425,8 +425,10 @@ contenedor.addEventListener('scroll', () => {
             loadMorePokemons(); //Aquí se pide otros 20 pokemones
             ventana_carga.classList.add('ventana-cargando-activado')
             buscador.disabled = true
+            document.querySelector('.favorito-guardados').style.pointerEvents = 'none'
             setTimeout(() => {
                 buscador.disabled = false
+                document.querySelector('.favorito-guardados').style.pointerEvents = 'fill'
                 ventana_carga.classList.remove('ventana-cargando-activado')
             }, 2500);
         }
