@@ -14,6 +14,15 @@ header {
     justify-content: center;
 }
 
+.favorito-guardados{
+    margin: 10px;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    right: 20px;
+    top: 0;
+}
+
 .info {
     gap: 10px;
     height: 100px;
@@ -92,11 +101,13 @@ main {
     border-radius: 10px 10px 0px 0px;
     font-size: 30px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
     height: 50%;
     width: 100%;
     background-color: #73a592;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 5px;
 
 }
 
@@ -228,6 +239,12 @@ footer {
     margin: 15px;
     justify-content: center;
     align-items: center;
+}
+
+.favorito{
+    margin-top: 10px;
+    height: 30px;
+
 }
 
 .contenedor-1 {
@@ -616,6 +633,28 @@ height: 100px;
     text-align: center;
 }
 
+.encabezado{
+    gap: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.encabezado div{
+    background: white;
+    border-radius: 100%;
+    display: flex;
+}
+
+.encabezado h3{
+color: #f2f2f2;
+}
+
+.cancelar-favoritos{
+    height: 40px;
+    width: 40px;
+}
 /* ---------------------------- */
 
 .pokemon-stats {
@@ -725,5 +764,11 @@ height: 100px;
 
     .bar {
         max-width: 260px;
+    }
+
+    .favorito-guardados{
+    width: 50px;
+    height: 50px;
+    right: -5px;
     }
 }

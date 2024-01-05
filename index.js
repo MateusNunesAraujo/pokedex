@@ -6,7 +6,9 @@ let cont_habitad = document.querySelector('.cont-habitad')
 let valor_est = document.querySelectorAll('.valor')
 let buscador = document.querySelector('#buscador')
 let btn_buscador = document.querySelector('#btn-buscador')
+let btn_favoritos_guardados = document.querySelector('.favorito-guardados')
 let buscando = false
+let favorito = document.getElementsByClassName('favorito')
 let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
 const limit = 20; //cantidad de pokemones que se le pide a la API traer 
 let nro_pokemon = 0
@@ -75,12 +77,12 @@ function informacion_pokemon(url) {
                 console.log(data6)
                 let descripcionEs = data6.names.find(entry => entry.language.name === 'es');
                 let flavor_text_entriesES = data6.flavor_text_entries.find(entry => entry.language.name === 'es')
-                    habilidades += `<div class="contenedor-habilidades">
-                                        <div class="nombre-habilidad">${descripcionEs.name }</div>
-                                        <div class="descripcion-habilidad">${flavor_text_entriesES ? flavor_text_entriesES.flavor_text: 'Descripción no disponible'}</div>
+                habilidades += `<div class="contenedor-habilidades">
+                                        <div class="nombre-habilidad">${descripcionEs.name}</div>
+                                        <div class="descripcion-habilidad">${flavor_text_entriesES ? flavor_text_entriesES.flavor_text : 'Descripción no disponible'}</div>
                                     </div>`;
-                    cont_habilidades.innerHTML = habilidades;
-                
+                cont_habilidades.innerHTML = habilidades;
+
             });
         });
         data4.stats.forEach((i) => {
@@ -219,25 +221,42 @@ function informacion_pokemon(url) {
 
 
 function loadMorePokemons() {
+    const encabezado_eliminar = document.querySelector('.encabezado')
+    if (encabezado_eliminar) {
+        encabezado_eliminar.remove()
+    }
     contenedor.classList.remove('contenedor-activado')
     buscando = false
     const url_api = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     fetch(url_api)
         .then((response) => response.json())
         .then((data) => {
-            data.results.forEach((element) => {
+            data.results.forEach((element, index) => {
 
                 fetch(element.url).then((response) => { return response.json() })
                     .then((data2) => {
                         fetch(data2.species.url).then((response) => { return response.json() })
                             .then((data3) => {
+                                let pokemon_favoritoDATA = JSON.parse(localStorage.getItem('pokemon'))
+                                let pokemon_favorito_comprobacion = {}
+
+                                for (const key in pokemon_favoritoDATA) {
+                                    console.log(key)
+
+                                    if (element.name === key) {
+                                        pokemon_favorito_comprobacion[element.name] = element.name
+                                    }
+                                }
 
                                 let tipo = '' //Intentar quitar los guiones para que no se vea feo
                                 let inf = ''
+
                                 data2.types.forEach(i => tipo += ' ' + i.type.name)
                                 inf += `<div class="contendor-card">
                         <div class="card">
-                            <div class="nombre-pokemon">${element.name}</div>
+                            <div class="nombre-pokemon">
+                                ${element.name}
+                            <img class="favorito" pokemon-name="${element.name}" src=${pokemon_favorito_comprobacion[element.name] ? 'favorito-agregado.png' : 'favorito.png'} alt=""></div>
                             <div class="sub-info">
                                 <div class="inf">${tipo}</div>
                                 <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
@@ -245,6 +264,7 @@ function loadMorePokemons() {
                             <div class="btn" url="${element.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
                         </div>
                     </div>`
+                                console.log(pokemon_favorito_comprobacion)
 
                                 if (inf !== '') {
                                     contenedor.innerHTML += inf
@@ -285,13 +305,36 @@ function loadMorePokemons() {
                                         informacion_pokemon(url)
                                     })
                                 }
+                                for (const iterator of favorito) {
+                                    iterator.addEventListener('click', (e) => {
+                                        console.log(e.target.src)
+                                        const pokemonName = e.target.getAttribute('pokemon-name');
+                                        let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
+
+                                        // Verifica si el pokemon ya está en el objeto almacenado
+                                        if (storedData[pokemonName]) {
+                                            // Si está, elimínalo del objeto
+                                            delete storedData[pokemonName];
+                                            e.target.src = 'favorito.png';
+                                        } else {
+                                            // Si no está, agrégalo al objeto
+                                            storedData[pokemonName] = { name: pokemonName, url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}/` };
+                                            e.target.src = 'favorito-agregado.png';
+                                        }
+
+                                        // Guarda el objeto actualizado en el localStorage
+                                        localStorage.setItem('pokemon', JSON.stringify(storedData));
+
+                                    }
+                                    )
+                                }
 
                             })
+
 
                     })
             });
         });
-
     offset += limit;
 }
 
@@ -386,15 +429,26 @@ contenedor.addEventListener('scroll', () => {
                 buscador.disabled = false
                 ventana_carga.classList.remove('ventana-cargando-activado')
             }, 2500);
-
         }
+
     }
+
+
 });
+
+function mostrarFavoritos(url) {
+    
+}
+
 btn_buscador.addEventListener('click', () => {
     buscando = true
+    const encabezado_eliminar = document.querySelector('.encabezado')
+    if (encabezado_eliminar) {
+        encabezado_eliminar.remove()
+    }
     let valor_busqueda = buscador.value.trim();
     valor_busqueda = valor_busqueda.toLowerCase()
-    valor_busqueda = valor_busqueda.replace(/ /g,"-")
+    valor_busqueda = valor_busqueda.replace(/ /g, "-")
     console.log(valor_busqueda)
     if (buscando) {
         contenedor.classList.remove('contenedor-activado')
@@ -403,19 +457,34 @@ btn_buscador.addEventListener('click', () => {
         fetch(`https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/`).then(response => response.json()).then((resultado) => {
             fetch(resultado.species.url).then((response) => { return response.json() })
                 .then((data3) => {
+                    let pokemon_favoritoDATA = JSON.parse(localStorage.getItem('pokemon'))
+                    let pokemon_favorito_comprobacion = {}
+
+                    for (const key in pokemon_favoritoDATA) {
+                        console.log(key)
+
+                        if (resultado.name === key) {
+                            pokemon_favorito_comprobacion[resultado.name] = resultado.name
+                        }
+                    }
+
                     let tipo = '' //Intentar quitar los guiones para que no se vea feo
                     let inf = ''
+
                     resultado.types.forEach(i => tipo += ' ' + i.type.name)
                     inf += `<div class="contendor-card">
-                        <div class="card">
-                            <div class="nombre-pokemon">${resultado.name}</div>
-                            <div class="sub-info">
-                                <div class="inf">${tipo}</div>
-                                <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
-                            </div>
-                            <div class="btn" url="https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/"><img class="btn-2" src="pokebola.png" alt=""></div>
-                        </div>
-                    </div>`
+            <div class="card">
+                <div class="nombre-pokemon">
+                    ${resultado.name}
+                <img class="favorito" pokemon-name="${resultado.name}" src=${pokemon_favorito_comprobacion[resultado.name] ? 'favorito-agregado.png' : 'favorito.png'} alt=""></div>
+                <div class="sub-info">
+                    <div class="inf">${tipo}</div>
+                    <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
+                </div>
+                <div class="btn" url="${resultado.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
+            </div>
+        </div>`
+                    console.log(pokemon_favorito_comprobacion)
                     if (inf !== '') {
                         contenedor.innerHTML += inf
                         nro_pokemon += 1
@@ -450,17 +519,40 @@ btn_buscador.addEventListener('click', () => {
                             informacion_pokemon(url)
                         })
                     }
+                    for (const iterator of favorito) {
+                        iterator.addEventListener('click', (e) => {
+                            console.log(e.target.src)
+                            const pokemonName = e.target.getAttribute('pokemon-name');
+                            let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
+
+                            // Verifica si el pokemon ya está en el objeto almacenado
+                            if (storedData[pokemonName]) {
+                                // Si está, elimínalo del objeto
+                                delete storedData[pokemonName];
+                                e.target.src = 'favorito.png';
+                            } else {
+                                // Si no está, agrégalo al objeto
+                                storedData[pokemonName] = { name: pokemonName, url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}/` };
+                                e.target.src = 'favorito-agregado.png';
+                            }
+
+                            // Guarda el objeto actualizado en el localStorage
+                            localStorage.setItem('pokemon', JSON.stringify(storedData));
+
+                        }
+                        )
+                    }
 
                 })
-                let mensaje_pikachu = `
-    <div class="mensaje-pikachu">
-        <div class="contenedor-mensaje-pikachu">
-            <img class="pikachu" src="happy_cartoon_pikachu_pointing_at_an_invisible_s.png" alt="pikachu">
+            let mensaje_pikachu = `
+        <div class="mensaje-pikachu">
+            <div class="contenedor-mensaje-pikachu">
+                <img class="pikachu" src="happy_cartoon_pikachu_pointing_at_an_invisible_s.png" alt="pikachu">
             <p>¡Aquí tienes al pokemón que estabas buscando!</p>
-        </div>
-    </div>`
-    contenedor.innerHTML += mensaje_pikachu
-                   
+            </div>
+        </div>`
+            contenedor.innerHTML += mensaje_pikachu
+
 
         }).catch(error => {
             contenedor.classList.add('contenedor-activado')
@@ -472,12 +564,10 @@ btn_buscador.addEventListener('click', () => {
 
         })
 
-        
-
     }
 
-    
-    
+
+
 
 })
 buscador.addEventListener('input', (e) => {
@@ -488,4 +578,132 @@ buscador.addEventListener('input', (e) => {
         document.querySelector('.contenedor').innerHTML = ''
         loadMorePokemons()
     }
+})
+
+btn_favoritos_guardados.addEventListener('click', (e) => {
+    buscando = true
+    e.target.src = 'close.png'
+   
+    if (e.target.classList.contains('cancelar-favoritos-activado')) {
+        const encabezado_eliminar = document.querySelector('.encabezado')
+        if (encabezado_eliminar) {
+            encabezado_eliminar.remove()
+        }
+        contenedor.innerHTML = ''
+        loadMorePokemons()
+        e.target.src = 'estrella.png'
+        e.target.classList.remove('cancelar-favoritos-activado')
+    }else{
+        e.target.classList.add('cancelar-favoritos-activado')
+        const mainContainer = document.querySelector('.contenedor');
+        const encabezado_eliminar = document.querySelector('.encabezado')
+        if (encabezado_eliminar) {
+            encabezado_eliminar.remove()
+        }
+        mainContainer.innerHTML = '';
+    
+        let encabezado_favorito = `
+        <div class="encabezado">
+           
+                <img class="cancelar-favoritos" src="estrella.png" alt="">
+            
+            <h3>POKEMONES FAVORITOS</h3>
+        </div>
+        `;
+        mainContainer.insertAdjacentHTML('beforebegin', encabezado_favorito);
+        let pokemonDATA = JSON.parse(localStorage.getItem('pokemon'))
+        for (const key in pokemonDATA) {
+            fetch(pokemonDATA[key].url).then(response => response.json()).then((resultado) => {
+                fetch(resultado.species.url).then((response) => { return response.json() })
+                    .then((data3) => {
+    
+                        let pokemon_favoritoDATA = JSON.parse(localStorage.getItem('pokemon'))
+                        let pokemon_favorito_comprobacion = {}
+    
+                        for (const key in pokemon_favoritoDATA) {
+                            if (resultado.name === key) {
+                                pokemon_favorito_comprobacion[resultado.name] = resultado.name
+                            }
+                        }
+    
+                        let tipo = '' //Intentar quitar los guiones para que no se vea feo
+                        let inf = ''
+    
+                        resultado.types.forEach(i => tipo += ' ' + i.type.name)
+                        inf += `<div class="contendor-card">
+            <div class="card">
+                <div class="nombre-pokemon">
+                    ${resultado.name}
+                <img class="favorito" pokemon-name="${resultado.name}" src=${pokemon_favorito_comprobacion[resultado.name] ? 'favorito-agregado.png' : 'favorito.png'} alt=""></div>
+                <div class="sub-info">
+                    <div class="inf">${tipo}</div>
+                    <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
+                </div>
+                <div class="btn" url="${pokemonDATA[key].url}"><img class="btn-2" src="pokebola.png" alt=""></div>
+            </div>
+        </div>`
+    
+                        if (inf !== '') {
+                            mainContainer.innerHTML += inf;
+                            nro_pokemon += 1;
+                            console.log(nro_pokemon);
+                        } else {
+                            mainContainer.innerHTML = `<h1>-SE ACABO LA LISTA DE POKEMONES-</h1>`;
+                            return;
+                        }
+                        for (let card of contenedor.children) {
+    
+                            let contenedores = card.children
+                            for (let nombre of contenedores) {
+                                nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
+                            }
+                        }
+                        let btn = document.querySelectorAll('.btn-2')
+                        for (let index = 0; index < btn.length; index++) {
+                            const element = btn[index];
+                            element.addEventListener('click', (e) => {
+                                e.target.classList.add('btn-precionado')
+                                e.target.src = 'pokebola-abierta.png'
+                                setTimeout(() => {
+    
+                                    e.target.classList.remove('btn-precionado')
+                                }, 100);
+                                modal.classList.add('modal--show')
+                            })
+                        }
+                        for (let element of btn) {
+                            element.addEventListener('click', (e) => {
+                                let url = e.target.parentElement.getAttribute('url')
+                                informacion_pokemon(url)
+                            })
+                        }
+                        for (const iterator of favorito) {
+                            iterator.addEventListener('click', (e) => {
+                                console.log(e.target.src)
+                                const pokemonName = e.target.getAttribute('pokemon-name');
+                                let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
+    
+                                // Verifica si el pokemon ya está en el objeto almacenado
+                                if (storedData[pokemonName]) {
+                                    // Si está, elimínalo del objeto
+                                    delete storedData[pokemonName];
+                                    e.target.src = 'favorito.png';
+                                } else {
+                                    // Si no está, agrégalo al objeto
+                                    storedData[pokemonName] = { name: pokemonName, url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}/` };
+                                    e.target.src = 'favorito-agregado.png';
+                                }
+    
+                                // Guarda el objeto actualizado en el localStorage
+                                localStorage.setItem('pokemon', JSON.stringify(storedData));
+    
+                            }
+                            )
+                        }
+    
+                    })
+            })
+        }
+    }
+   
 })
