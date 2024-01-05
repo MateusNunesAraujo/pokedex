@@ -481,7 +481,7 @@ btn_buscador.addEventListener('click', () => {
                     <div class="inf">${tipo}</div>
                     <div class="inf">${data3.habitat !== null ? data3.habitat.name : 'No hay habitad'}</div>
                 </div>
-                <div class="btn" url="${resultado.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
+                <div class="btn" url="https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/"><img class="btn-2" src="pokebola.png" alt=""></div>
             </div>
         </div>`
                     console.log(pokemon_favorito_comprobacion)
