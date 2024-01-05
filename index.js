@@ -393,6 +393,9 @@ contenedor.addEventListener('scroll', () => {
 btn_buscador.addEventListener('click', () => {
     buscando = true
     let valor_busqueda = buscador.value.trim();
+    valor_busqueda = valor_busqueda.toLowerCase()
+    valor_busqueda = valor_busqueda.replace(/ /g,"-")
+    console.log(valor_busqueda)
     if (buscando) {
         contenedor.classList.remove('contenedor-activado')
         document.querySelector('.contenedor').innerHTML = ''
@@ -449,6 +452,14 @@ btn_buscador.addEventListener('click', () => {
                     }
 
                 })
+                let mensaje_pikachu = `
+    <div class="mensaje-pikachu">
+        <div class="contenedor-mensaje-pikachu">
+            <img class="pikachu" src="happy_cartoon_pikachu_pointing_at_an_invisible_s.png" alt="pikachu">
+            <p>¡Aquí tienes al pokemón que estabas buscando!</p>
+        </div>
+    </div>`
+    contenedor.innerHTML += mensaje_pikachu
                    
 
         }).catch(error => {
@@ -461,16 +472,12 @@ btn_buscador.addEventListener('click', () => {
 
         })
 
+        
+
     }
+
     
-    let mensaje_pikachu = `
-    <div class="mensaje-pikachu">
-        <div class="contenedor-mensaje-pikachu">
-            <img class="pikachu" src="happy_cartoon_pikachu_pointing_at_an_invisible_s.png" alt="pikachu">
-            <p>¡Aquí tienes al pokemón que estabas buscando!</p>
-        </div>
-    </div>`
-    contenedor.innerHTML += mensaje_pikachu
+    
 
 })
 buscador.addEventListener('input', (e) => {
