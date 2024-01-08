@@ -13,6 +13,16 @@ let offset = 0; //Variable donde se establece la posicion donde se pide a la API
 const limit = 20; //cantidad de pokemones que se le pide a la API traer 
 let nro_pokemon = 0
 
+function cargando() {
+    let ventana_carga = document.querySelector('.ventana-cargando')
+    ventana_carga.classList.add('ventana-cargando-activado')
+    document.querySelector('.favorito-guardados').style.pointerEvents = 'none'
+    setTimeout(() => {
+        buscador.disabled = false
+        document.querySelector('.favorito-guardados').style.pointerEvents = 'fill'
+        ventana_carga.classList.remove('ventana-cargando-activado')
+    }, 2500);
+}
 
 /* ------------ */
 // Actualiza las barras de estadísticas con los valores proporcionados
@@ -221,6 +231,7 @@ function informacion_pokemon(url) {
 
 
 function loadMorePokemons() {
+    cargando()
     const encabezado_eliminar = document.querySelector('.encabezado')
     if (encabezado_eliminar) {
         encabezado_eliminar.remove()
@@ -416,31 +427,18 @@ document.querySelector('.inf-adicional').addEventListener('click', (e) => {
 //Mostrar más 20 pokemones al momento de hacer scroll hasta la parte final del contenedor visible
 /*  console.log(`Posición:${scrollPosition}-Altura del Scroll:${totalHeight}-Altura del contenedor:${windowHeight}`) */
 contenedor.addEventListener('scroll', () => {
-    let ventana_carga = document.querySelector('.ventana-cargando')
     const scrollPosition = contenedor.scrollTop;
     const totalHeight = contenedor.scrollHeight;
     const windowHeight = contenedor.clientHeight;
     if (buscando === false) {
         if (scrollPosition + windowHeight + 1 >= totalHeight) {
             loadMorePokemons(); //Aquí se pide otros 20 pokemones
-            ventana_carga.classList.add('ventana-cargando-activado')
-            buscador.disabled = true
-            document.querySelector('.favorito-guardados').style.pointerEvents = 'none'
-            setTimeout(() => {
-                buscador.disabled = false
-                document.querySelector('.favorito-guardados').style.pointerEvents = 'fill'
-                ventana_carga.classList.remove('ventana-cargando-activado')
-            }, 2500);
         }
 
     }
 
-
 });
 
-function mostrarFavoritos(url) {
-    
-}
 
 btn_buscador.addEventListener('click', () => {
     buscando = true
@@ -585,7 +583,6 @@ buscador.addEventListener('input', (e) => {
 btn_favoritos_guardados.addEventListener('click', (e) => {
     buscando = true
     e.target.src = 'close.png'
-   
     if (e.target.classList.contains('cancelar-favoritos-activado')) {
         const encabezado_eliminar = document.querySelector('.encabezado')
         if (encabezado_eliminar) {
@@ -708,4 +705,12 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
         }
     }
    
+})
+
+btn_buscador.addEventListener('click',(e)=>{
+    e.target.classList.add('btn-buscador-activado')
+setTimeout(() => {
+    e.target.classList.remove('btn-buscador-activado')
+}, 100);
+
 })
