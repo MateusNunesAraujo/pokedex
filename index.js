@@ -7,6 +7,8 @@ let valor_est = document.querySelectorAll('.valor')
 let buscador = document.querySelector('#buscador')
 let btn_buscador = document.querySelector('#btn-buscador')
 let btn_favoritos_guardados = document.querySelector('.favorito-guardados')
+let btn_about_me = document.querySelector('#about-me')
+let footer = document.querySelector('footer')
 let buscando = false
 let favorito = document.getElementsByClassName('favorito')
 let offset = 0; //Variable donde se establece la posicion donde se pide a la API traer a los pokemones
@@ -345,10 +347,17 @@ function loadMorePokemons() {
 
                     })
             });
+        }).catch(error => {
+            let sin_conexion = `
+            <div class="sin_conexion">
+                <p>Sin conexión a internet</p>
+            </div>`/* Mensaje de sí no hay internet */
+            contenedor.innerHTML = sin_conexion
+           
         });
     offset += limit;
-}
 
+}
 //Se llama a la función para cargar los primeros 20 pokemones 
 loadMorePokemons();
 
@@ -440,8 +449,12 @@ contenedor.addEventListener('scroll', () => {
 });
 
 
-btn_buscador.addEventListener('click', () => {
+btn_buscador.addEventListener('click', (e) => {
     buscando = true
+    e.target.classList.add('btn-buscador-activado')
+    setTimeout(() => {
+        e.target.classList.remove('btn-buscador-activado')
+    }, 100);
     const encabezado_eliminar = document.querySelector('.encabezado')
     if (encabezado_eliminar) {
         encabezado_eliminar.remove()
@@ -450,13 +463,17 @@ btn_buscador.addEventListener('click', () => {
     valor_busqueda = valor_busqueda.toLowerCase()
     valor_busqueda = valor_busqueda.replace(/ /g, "-")
     console.log(valor_busqueda)
-    if (buscando) {
+    if (buscando && valor_busqueda !== '') {
         contenedor.classList.remove('contenedor-activado')
         document.querySelector('.contenedor').innerHTML = ''
         contenedor.classList.add('contenedor-activado')
         fetch(`https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/`).then(response => response.json()).then((resultado) => {
             fetch(resultado.species.url).then((response) => { return response.json() })
                 .then((data3) => {
+                    const mensaje_cargando = document.querySelector('.mensaje-cargando')
+                    if (mensaje_cargando) {
+                        mensaje_cargando.remove()
+                    }
                     let pokemon_favoritoDATA = JSON.parse(localStorage.getItem('pokemon'))
                     let pokemon_favorito_comprobacion = {}
 
@@ -563,10 +580,14 @@ btn_buscador.addEventListener('click', () => {
             </div>`
 
         })
-
+        let mensaje_cargando = `
+        <div class="mensaje-cargando">
+            <img src="pikachu_corriendo.gif" alt="">
+            <p>Cargando...</p>
+        </div>
+        `
+        contenedor.innerHTML = mensaje_cargando
     }
-
-
 
 
 })
@@ -585,6 +606,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
     e.target.src = 'close.png'
     if (e.target.classList.contains('cancelar-favoritos-activado')) {
         const encabezado_eliminar = document.querySelector('.encabezado')
+        contenedor.classList.remove('contenedor-favoritos')
         if (encabezado_eliminar) {
             encabezado_eliminar.remove()
         }
@@ -592,15 +614,16 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
         loadMorePokemons()
         e.target.src = 'estrella.png'
         e.target.classList.remove('cancelar-favoritos-activado')
-    }else{
+    } else {
         e.target.classList.add('cancelar-favoritos-activado')
         const mainContainer = document.querySelector('.contenedor');
         const encabezado_eliminar = document.querySelector('.encabezado')
+        mainContainer.classList.add('contenedor-favoritos')
         if (encabezado_eliminar) {
             encabezado_eliminar.remove()
         }
         mainContainer.innerHTML = '';
-    
+
         let encabezado_favorito = `
         <div class="encabezado">
            
@@ -615,19 +638,19 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
             fetch(pokemonDATA[key].url).then(response => response.json()).then((resultado) => {
                 fetch(resultado.species.url).then((response) => { return response.json() })
                     .then((data3) => {
-    
+
                         let pokemon_favoritoDATA = JSON.parse(localStorage.getItem('pokemon'))
                         let pokemon_favorito_comprobacion = {}
-    
+
                         for (const key in pokemon_favoritoDATA) {
                             if (resultado.name === key) {
                                 pokemon_favorito_comprobacion[resultado.name] = resultado.name
                             }
                         }
-    
+
                         let tipo = '' //Intentar quitar los guiones para que no se vea feo
                         let inf = ''
-    
+
                         resultado.types.forEach(i => tipo += ' ' + i.type.name)
                         inf += `<div class="contendor-card">
             <div class="card">
@@ -641,7 +664,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                 <div class="btn" url="${pokemonDATA[key].url}"><img class="btn-2" src="pokebola.png" alt=""></div>
             </div>
         </div>`
-    
+
                         if (inf !== '') {
                             mainContainer.innerHTML += inf;
                             nro_pokemon += 1;
@@ -651,7 +674,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                             return;
                         }
                         for (let card of contenedor.children) {
-    
+
                             let contenedores = card.children
                             for (let nombre of contenedores) {
                                 nombre.children[0].style.backgroundImage += `linear-gradient(45deg, ${data3.color.name}, transparent)` /* += data3.color.name */
@@ -664,7 +687,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                                 e.target.classList.add('btn-precionado')
                                 e.target.src = 'pokebola-abierta.png'
                                 setTimeout(() => {
-    
+
                                     e.target.classList.remove('btn-precionado')
                                 }, 100);
                                 modal.classList.add('modal--show')
@@ -681,7 +704,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                                 console.log(e.target.src)
                                 const pokemonName = e.target.getAttribute('pokemon-name');
                                 let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
-    
+
                                 // Verifica si el pokemon ya está en el objeto almacenado
                                 if (storedData[pokemonName]) {
                                     // Si está, elimínalo del objeto
@@ -692,25 +715,33 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                                     storedData[pokemonName] = { name: pokemonName, url: `https://pokeapi.co/api/v2/pokemon/${pokemonName}/` };
                                     e.target.src = 'favorito-agregado.png';
                                 }
-    
+
                                 // Guarda el objeto actualizado en el localStorage
                                 localStorage.setItem('pokemon', JSON.stringify(storedData));
-    
+
                             }
                             )
                         }
-    
+
                     })
             })
         }
     }
-   
 })
 
-btn_buscador.addEventListener('click',(e)=>{
-    e.target.classList.add('btn-buscador-activado')
-setTimeout(() => {
-    e.target.classList.remove('btn-buscador-activado')
-}, 100);
+btn_about_me.addEventListener('click', (e) => {
+    if (e.target.classList.contains('cancelar-activado')) {
+        e.target.classList.remove('cancelar-activado')
+        e.target.src = 'ayudar.png'
+        footer.classList.remove('footer-activado')
+        document.querySelector('.information-about-me').classList.remove('information-about-me-activado')
+        
+    } else {
+        e.target.classList.add('cancelar-activado')
+        e.target.src = 'multiply.png'
+        footer.classList.add('footer-activado')
+        document.querySelector('.information-about-me').classList.add('information-about-me-activado')
+    }
+
 
 })
