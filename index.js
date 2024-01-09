@@ -86,7 +86,6 @@ function informacion_pokemon(url) {
         let habilidades = ''
         data4.abilities.forEach((element, i) => {
             fetch(element.ability.url).then(response => response.json()).then((data6) => {
-                console.log(data6)
                 let descripcionEs = data6.names.find(entry => entry.language.name === 'es');
                 let flavor_text_entriesES = data6.flavor_text_entries.find(entry => entry.language.name === 'es')
                 habilidades += `<div class="contenedor-habilidades">
@@ -225,6 +224,29 @@ function informacion_pokemon(url) {
 
             }
         })
+
+        fetch(data4.species.url).then(response => response.json()).then(data_variantes => {
+            console.log(data_variantes)
+            let variantes = ''
+
+            data_variantes.varieties.forEach(element => {
+                variantes += `
+            <div class="variante">
+                <img src="variantes.png" alt="">
+                <a href="${element.pokemon.url}">${element.pokemon.name}</a>
+            </div>`
+            })
+            document.querySelector('.lista-variantes').innerHTML = variantes
+            document.querySelectorAll('.variante').forEach(element => {
+                element.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    informacion_pokemon(e.target.getAttribute('href'))
+                })
+            })
+
+
+        })
+
     }).catch(error => {
         console.log('Aquí se esta manejando el error')
     })
@@ -254,7 +276,6 @@ function loadMorePokemons() {
                                 let pokemon_favorito_comprobacion = {}
 
                                 for (const key in pokemon_favoritoDATA) {
-                                    console.log(key)
 
                                     if (element.name === key) {
                                         pokemon_favorito_comprobacion[element.name] = element.name
@@ -277,7 +298,6 @@ function loadMorePokemons() {
                             <div class="btn" url="${element.url}"><img class="btn-2" src="pokebola.png" alt=""></div>
                         </div>
                     </div>`
-                                console.log(pokemon_favorito_comprobacion)
 
                                 if (inf !== '') {
                                     contenedor.innerHTML += inf
@@ -320,7 +340,6 @@ function loadMorePokemons() {
                                 }
                                 for (const iterator of favorito) {
                                     iterator.addEventListener('click', (e) => {
-                                        console.log(e.target.src)
                                         const pokemonName = e.target.getAttribute('pokemon-name');
                                         let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
 
@@ -353,7 +372,7 @@ function loadMorePokemons() {
                 <p>Sin conexión a internet</p>
             </div>`/* Mensaje de sí no hay internet */
             contenedor.innerHTML = sin_conexion
-           
+
         });
     offset += limit;
 
@@ -462,7 +481,6 @@ btn_buscador.addEventListener('click', (e) => {
     let valor_busqueda = buscador.value.trim();
     valor_busqueda = valor_busqueda.toLowerCase()
     valor_busqueda = valor_busqueda.replace(/ /g, "-")
-    console.log(valor_busqueda)
     if (buscando && valor_busqueda !== '') {
         contenedor.classList.remove('contenedor-activado')
         document.querySelector('.contenedor').innerHTML = ''
@@ -478,7 +496,6 @@ btn_buscador.addEventListener('click', (e) => {
                     let pokemon_favorito_comprobacion = {}
 
                     for (const key in pokemon_favoritoDATA) {
-                        console.log(key)
 
                         if (resultado.name === key) {
                             pokemon_favorito_comprobacion[resultado.name] = resultado.name
@@ -501,7 +518,6 @@ btn_buscador.addEventListener('click', (e) => {
                 <div class="btn" url="https://pokeapi.co/api/v2/pokemon/${valor_busqueda}/"><img class="btn-2" src="pokebola.png" alt=""></div>
             </div>
         </div>`
-                    console.log(pokemon_favorito_comprobacion)
                     if (inf !== '') {
                         contenedor.innerHTML += inf
                         nro_pokemon += 1
@@ -538,7 +554,6 @@ btn_buscador.addEventListener('click', (e) => {
                     }
                     for (const iterator of favorito) {
                         iterator.addEventListener('click', (e) => {
-                            console.log(e.target.src)
                             const pokemonName = e.target.getAttribute('pokemon-name');
                             let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
 
@@ -701,7 +716,7 @@ btn_favoritos_guardados.addEventListener('click', (e) => {
                         }
                         for (const iterator of favorito) {
                             iterator.addEventListener('click', (e) => {
-                                console.log(e.target.src)
+
                                 const pokemonName = e.target.getAttribute('pokemon-name');
                                 let storedData = JSON.parse(localStorage.getItem('pokemon')) || {};
 
@@ -735,12 +750,24 @@ btn_about_me.addEventListener('click', (e) => {
         e.target.src = 'ayudar.png'
         footer.classList.remove('footer-activado')
         document.querySelector('.information-about-me').classList.remove('information-about-me-activado')
-        
+
     } else {
         e.target.classList.add('cancelar-activado')
         e.target.src = 'multiply.png'
         footer.classList.add('footer-activado')
         document.querySelector('.information-about-me').classList.add('information-about-me-activado')
+    }
+
+
+})
+
+document.querySelector('.logo-red-social').addEventListener('click', (e) => {
+    let cont_palabra = document.querySelector('.red-social')
+    for (const letra of 'facebook') {
+            
+            cont_palabra.innerHTML += letra
+
+        
     }
 
 

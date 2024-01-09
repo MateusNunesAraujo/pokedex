@@ -250,16 +250,16 @@ footer {
 }
 
 .informacion-inicial{
-    margin-top: 20px;
-    width: 80%;
+    width: 85%;
     display: flex;
     flex-direction: column;
+    gap: 5px;
     align-items: center;
-    gap: 10px;
 }
 
 .informacion-inicial img{
-height: 120px;
+    height: 120px;
+    margin-top: 10px;
 } 
 
 .informacion-adicional{
@@ -267,6 +267,7 @@ height: 120px;
     display: flex;
     flex-direction: column;
     gap: 5px;
+    align-items: center;
 }
 
 .creador{
@@ -302,7 +303,7 @@ height: 120px;
 /* modal */
 
 .modal {
-    z-index: 2;
+    z-index: 5;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -393,7 +394,7 @@ height: 120px;
     position: relative;
     width: 30px;
     height: 30px;
-    bottom: 25px;
+    bottom: 10px;
     right: 90px;
 }
 
@@ -479,7 +480,7 @@ height: 120px;
     left: 85px;
     content: "";
     width: 35px;
-    top: 10px;
+    top: 24px;
 }
 
 .contenedor-2 {
@@ -555,8 +556,8 @@ height: 120px;
 .img-pokemon {
     position: relative;
     top: 30px;
-    width: 90%;
-    height: 90%;
+    width: 80%;
+    height: 80%;
 }
 
 .estadisticas {
@@ -576,7 +577,8 @@ height: 120px;
     align-items: center;
 }
 
-.evolucion{
+.evolucion,.variante{
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -677,6 +679,31 @@ height: 120px;
     width: 50%;
     border-radius: 50px;
     background-image: linear-gradient(180deg, #8d0996, transparent);
+}
+
+.title-5{
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+    width: 50%;
+    border-radius: 50px;
+    background-image: linear-gradient(180deg, #ffa201, transparent);
+}
+
+.lista-variantes{
+    margin: 15px 15px;
+    grid-template-columns: 1fr 1fr 1fr;
+    display: grid;
+    gap: 10px;
+    align-items: center;
+}
+
+.lista-variantes img {
+    border-radius: 100%;
+    width: 55px;
+    height: 55px;
 }
 
 /* Clases activas */
@@ -814,6 +841,39 @@ bottom: 0;
     transition: 1s;
 bottom: 0;
 }
+
+.emoji{
+    margin-left: 5px;
+height: 40px;
+}
+
+.programador{
+    display: flex;
+    align-items: center;
+}
+
+.programador a {
+margin-left: 5px;
+}
+
+.contenedor-red-social{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.red-social{
+transition: 3s;
+}
+
+.logo-red-social{
+height: 50px;
+}
+
+/* Trabajando en las animaciones del footer */
+
+
 /* ---------------------------- */
 
 .pokemon-stats {
