@@ -303,7 +303,7 @@ footer {
 /* modal */
 
 .modal {
-    z-index: 5;
+    z-index: 10;
     position: fixed;
     top: 0;
     bottom: 0;

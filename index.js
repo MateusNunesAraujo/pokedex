@@ -764,7 +764,7 @@ btn_about_me.addEventListener('click', (e) => {
 document.querySelector('.logo-red-social').addEventListener('click', (e) => {
     let cont_palabra = document.querySelector('.red-social')
     for (const letra of 'facebook') {
-            
+                
             cont_palabra.innerHTML += letra
 
         
